@@ -1,0 +1,46 @@
+DirectoryIndex index.php index.html
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Redirect any legacy /public_html/ URLs to the clean root URL
+    RewriteRule ^public_html/(.*)$ $1 [R=301,L]
+
+    # Transparently serve .php pages (powered by includes/header.php & footer.php)
+    # when visitors or search engines request legacy .html URLs
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.+)\.html$ $1.php [L,QSA]
+</IfModule>
+
+# ==========================================================================
+# GZIP / DEFLATE COMPRESSION FOR FAST TRANSFER (HTML, CSS, JS, SVG, JSON)
+# ==========================================================================
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css
+    AddOutputFilterByType DEFLATE application/javascript application/x-javascript text/javascript
+    AddOutputFilterByType DEFLATE application/json image/svg+xml image/x-icon
+</IfModule>
+
+# ==========================================================================
+# BROWSER CACHING FOR INSTANT PAGE-TO-PAGE NAVIGATION
+# ==========================================================================
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresDefault "access plus 1 month"
+    ExpiresByType text/html "access plus 0 seconds"
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType text/javascript "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType image/x-icon "access plus 1 year"
+</IfModule>
+
+<IfModule mod_headers.c>
+    <FilesMatch "\.(ico|jpg|jpeg|png|webp|svg|css|js)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+</IfModule>
+
